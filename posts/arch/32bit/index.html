@@ -8,12 +8,29 @@
 <meta http-equiv=cache-control content="no-siteapp">
 <meta name=generator content="Hugo 0.91.2">
 <link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/dsrkafuu/dsr-cdn-main@1/images/favicons/dsrca.ico>
-<title>Tags - My New Hugo Site</title>
-<link rel=alternate type=application/rss+xml href=https://se0r12.github.io/tags/index.xml title="My New Hugo Site">
-<meta property="og:title" content="Tags">
-<meta name=twitter:title content="Tags">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://se0r12.github.io/tags/"><meta name=twitter:card content="summary"><meta property="og:updated_time" content="2023-02-03T16:08:21+09:00">
+<title>Archlinuxで32bit実行可能ファイルを実行する方法 - My New Hugo Site</title>
+<meta name=keywords content="Archlinux,ctf">
+<meta property="og:title" content="Archlinuxで32bit実行可能ファイルを実行する方法">
+<meta name=twitter:title content="Archlinuxで32bit実行可能ファイルを実行する方法">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://se0r12.github.io/posts/arch/32bit/"><meta property="og:description" content="概要 Pwnを勉強しているとき、32bit executable fileを実行する方法がよくわからなかったので、それの対処を書くだけのブログ。
+最初、ファイルが与えられたとき、実行をしてみると、
+Check the interpreter or linker? このようなエラーが出た。
+対処 いろいろ調べていると、/etc/pacman.confの、
+[multilib] Include = /etc/pacman.d/mirrorlist この部分のコメントアウトをまず外す
+次に、パッケージの更新
+sudo pacman -Syy 次に、pacage一覧の取得
+pacman -Sl multilib これができたら、
+sudo pacman -S lib32-glibc 多分これで実行できます。">
+<meta name=twitter:description content="概要 Pwnを勉強しているとき、32bit executable fileを実行する方法がよくわからなかったので、それの対処を書くだけのブログ。
+最初、ファイルが与えられたとき、実行をしてみると、
+Check the interpreter or linker? このようなエラーが出た。
+対処 いろいろ調べていると、/etc/pacman.confの、
+[multilib] Include = /etc/pacman.d/mirrorlist この部分のコメントアウトをまず外す
+次に、パッケージの更新
+sudo pacman -Syy 次に、pacage一覧の取得
+pacman -Sl multilib これができたら、
+sudo pacman -S lib32-glibc 多分これで実行できます。"><meta name=twitter:card content="summary"><meta property="article:published_time" content="2023-02-03T16:08:21+09:00"><meta property="article:modified_time" content="2023-02-03T16:08:21+09:00">
 <style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
 <link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
 </head>
@@ -29,7 +46,7 @@
 <main>
 <div class="container-lg clearfix">
 <div class="col-12 col-md-9 float-left content">
-<div class=post>
+<article>
 <h2 class="post-item post-title">
 <a href=https://se0r12.github.io/posts/arch/32bit/>Archlinuxで32bit実行可能ファイルを実行する方法</a>
 </h2>
@@ -37,33 +54,26 @@
 <span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-02-03</span>
 <span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/archlinux>Archlinux</a>&nbsp;<a href=/tags/ctf>ctf</a>&nbsp;</span>
 </div>
-<div class="post-item post-summary markdown-body">
-概要 Pwnを勉強しているとき、32bit executable fileを実行する方法がよくわからなかったので、それの対処を書くだけのブログ。
-最初、ファイルが与えられたとき、実行をしてみると、
-Check the interpreter or linker? このようなエラーが出た。
-対処 いろいろ調べていると、/etc/pacman.confの、
-[multilib] Include = /etc/pacman.d/mirrorlist この部分のコメントアウトをまず外す
-次に、パッケージの更新
-sudo pacman -Syy 次に、pacage一覧の取得
-pacman -Sl multilib これができたら、
-sudo pacman -S lib32-glibc 多分これで実行できます。
+<div class="post-content markdown-body">
+<h1 id=概要>概要</h1>
+<p>Pwnを勉強しているとき、<code>32bit executable file</code>を実行する方法がよくわからなかったので、それの対処を書くだけのブログ。</p>
+<p>最初、ファイルが与えられたとき、実行をしてみると、</p>
+<pre tabindex=0><code>Check the interpreter or linker?
+</code></pre><p>このようなエラーが出た。</p>
+<h1 id=対処>対処</h1>
+<p>いろいろ調べていると、<code>/etc/pacman.conf</code>の、</p>
+<pre tabindex=0><code>[multilib]
+Include = /etc/pacman.d/mirrorlist
+</code></pre><p>この部分のコメントアウトをまず外す</p>
+<p>次に、<code>パッケージの更新</code></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo pacman -Syy
+</code></pre></div><p>次に、<code>pacage</code>一覧の取得</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>pacman -Sl multilib
+</code></pre></div><p>これができたら、</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>sudo pacman -S lib32-glibc
+</code></pre></div><p>多分これで実行できます。</p>
 </div>
-</div>
-<div class=post>
-<h2 class="post-item post-title">
-<a href=https://se0r12.github.io/posts/hello/>Hello</a>
-</h2>
-<div class="post-item post-meta">
-<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-02-01</span>
-<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;No tag</span>
-</div>
-<div class="post-item post-summary markdown-body">
-自己紹介 se0r12です。
-2023年02月01日現在は20歳でそろそろ21になります。
-興味 CTF (Web, Pwn) 特にWeb exploitに興味があります。が弱いです
-興味のあるプログラミング言語 nim python C javascript
-</div>
-</div>
+</article>
 </div>
 <aside class="col-12 col-md-3 float-left sidebar">
 <div class="sidebar-item sidebar-pages">
@@ -87,6 +97,8 @@ sudo pacman -S lib32-glibc 多分これで実行できます。
 </span>
 </div>
 </div>
+<div class="sidebar-item sidebar-toc">
+<h3>Table of Contents</h3><nav id=TableOfContents></nav></div>
 </aside>
 </div>
 <div class=btn>
