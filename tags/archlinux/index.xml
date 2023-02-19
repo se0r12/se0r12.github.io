@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Archlinux on se0r12 blog</title><link>https://se0r12.github.io/tags/archlinux/</link><description>Recent content in Archlinux on se0r12 blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 03 Feb 2023 16:08:21 +0900</lastBuildDate><atom:link href="https://se0r12.github.io/tags/archlinux/index.xml" rel="self" type="application/rss+xml"/><item><title>Archlinuxで32bit実行可能ファイルを実行する方法</title><link>https://se0r12.github.io/posts/arch/32bit/</link><pubDate>Fri, 03 Feb 2023 16:08:21 +0900</pubDate><guid>https://se0r12.github.io/posts/arch/32bit/</guid><description>概要 Pwnを勉強しているとき、32bit executable fileを実行する方法がよくわからなかったので、それの対処を書くだけのブログ。
-最初、ファイルが与えられたとき、実行をしてみると、
-Check the interpreter or linker? このようなエラーが出た。
-対処 いろいろ調べていると、/etc/pacman.confの、
-[multilib] Include = /etc/pacman.d/mirrorlist この部分のコメントアウトをまず外す
-次に、パッケージの更新
-sudo pacman -Syy 次に、pacage一覧の取得
-pacman -Sl multilib これができたら、
-sudo pacman -S lib32-glibc 多分これで実行できます。</description></item></channel></rss>
