@@ -13,7 +13,7 @@
 <meta property="og:title" content="Tags">
 <meta name=twitter:title content="Tags">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://se0r12.github.io/tags/"><meta name=twitter:card content="summary"><meta property="og:updated_time" content="2023-02-03T16:08:21+09:00">
+<meta property="og:url" content="https://se0r12.github.io/tags/"><meta name=twitter:card content="summary"><meta property="og:updated_time" content="2023-02-19T21:54:58+09:00">
 <style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
 <link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
 </head>
@@ -29,6 +29,63 @@
 <main>
 <div class="container-lg clearfix">
 <div class="col-12 col-md-9 float-left content">
+<div class=post>
+<h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/hacktm/writeup/>HackTM ctf 2023</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-02-19</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/ctf>ctf</a>&nbsp;</span>
+</div>
+<div class="post-item post-summary markdown-body">
+HackTM ctf writeup 2023/02/19(日)はHackTM CTFに参加していました。
+結果は、
+このような感じでした。
+Webをもっと解けるようにしたい。
+今回は、Miscは調べるだけだったので特に何も書きません。
+web blog アクセスするとまずログイン画面が出てきます。
+ひとまず、se0r12, testでアカウントを作って進みます。
+アカウントを作成すると、Cookieが、
+Cookie: user=Tzo0OiJVc2VyIjoyOntzOjc6InByb2ZpbGUiO086NzoiUHJvZmlsZSI6Mjp7czo4OiJ1c2VybmFtZSI7czo2OiJzZTByMTIiO3M6MTI6InBpY3R1cmVfcGF0aCI7czoyNzoiaW1hZ2VzL3JlYWxfcHJvZ3JhbW1lcnMucG5nIjt9czo1OiJwb3N0cyI7YTowOnt9fQ%3D%3D このようになっていて、これをイジイジすると
+O:4:"User":2:{s:7:"profile";O:7:"Profile":2:{s:8:"username";s:6:"se0r12";s:12:"picture_path";s:27:"images/real_programmers.png";}s:5:"posts";a:0:{}} このようになっていました。
+次にソースコードを眺めてみます。
+until.php
+public function __toString() { if (gettype($this->picture_path) !== "string") { return ""; } $picture = base64_encode(file_get_contents($this->picture_path)); // check if user exists $conn = new Conn; $conn->queries = array(new Query( "select id from users where username = :username", array(":username" => $this->username) )); $result = $conn(); if ($result[0] === false || $result[0]->fetchArray() === false) { return "&lt;script>window.
+</div>
+</div>
+<div class=post>
+<h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/incognito_4.0/writeup/>Incognito 4.0 ctf</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-02-19</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/ctf>ctf</a>&nbsp;</span>
+</div>
+<div class="post-item post-summary markdown-body">
+Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。
+get flag1だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。
+結果 Web get flag1 アクセスするとこのような画面にいきます。
+URLを入力するようなのでとりあえず、https://example.comを入れると、以下のようになりました。
+ただ、redirectしていると思ったので、open redirect via ssrfとか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。
+SSRFの脆弱性があるところとは別のところにopen redirectがあるとssrfの対策を回避可能みたいな認識なので。
+今回はどうも、指定したURLに対してfetch(?)かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)
+画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)
+ただURLを見てみると、http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com。なので、単純なSSRFを行えば行けるか？と思い、とりあえずhttp://127.0.0.1:9001/flag.txtとしていましたが、
+{"status":500,"message":"Error Fetching URL"} のようにエラーが出てきてしまいます。
+まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、http://0.0.0.0:9001/flag.txtとすると、上手くいきました。
+ictf{l0c4l_byp4$$_323theu0a9} get flag2 これも同じような問題で、アクセス時の画像はget flag1と同じでした。
+ただ、フィルターをちょっと厳しめにしたような問題でした
+ペイロードは、http://[::]:9001/だった気がします。
+ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。
+massive urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。
+後はlogin画面のurlが別にあるような問題でした。
+test@test.comで行ったところ、existとなったので、とりあえずチェックをしてみると、{status: exist, isAdmin: false}のような出力が飛んできました。
+登録時にisAdmin: trueにすればいいだろうと思ったので、Cookie: isAdmin=trueと、body parameterにisAdmin=trueとして送りつけました。
+どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。
+Rev Meow 一番点が低かったので、stringsでフラグげ取れないかなと思いやってみました。
+$file meow meow: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5364dd913e17a0a897677ff1234cbd21547bdd8, for GNU/Linux 4.4.0, not stripped $strings meow strings meow /lib64/ld-linux-x86-64.
+</div>
+</div>
 <div class=post>
 <h2 class="post-item post-title">
 <a href=https://se0r12.github.io/posts/arch/32bit/>Archlinuxで32bit実行可能ファイルを実行する方法</a>

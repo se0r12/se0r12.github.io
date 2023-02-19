@@ -1,0 +1,320 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=HandheldFriendly content="True">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=generator content="Hugo 0.91.2">
+<link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/dsrkafuu/dsr-cdn-main@1/images/favicons/dsrca.ico>
+<title>Incognito 4.0 ctf - se0r12 blog</title>
+<meta name=keywords content="ctf">
+<meta property="og:title" content="Incognito 4.0 ctf">
+<meta name=twitter:title content="Incognito 4.0 ctf">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://se0r12.github.io/posts/ctf/incognito_4.0/writeup/"><meta property="og:description" content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。
+get flag1だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。
+結果 Web get flag1 アクセスするとこのような画面にいきます。
+URLを入力するようなのでとりあえず、https://example.comを入れると、以下のようになりました。
+ただ、redirectしていると思ったので、open redirect via ssrfとか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。
+SSRFの脆弱性があるところとは別のところにopen redirectがあるとssrfの対策を回避可能みたいな認識なので。
+今回はどうも、指定したURLに対してfetch(?)かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)
+画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)
+ただURLを見てみると、http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com。なので、単純なSSRFを行えば行けるか？と思い、とりあえずhttp://127.0.0.1:9001/flag.txtとしていましたが、
+{&#34;status&#34;:500,&#34;message&#34;:&#34;Error Fetching URL&#34;} のようにエラーが出てきてしまいます。
+まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、http://0.0.0.0:9001/flag.txtとすると、上手くいきました。
+ictf{l0c4l_byp4$$_323theu0a9} get flag2 これも同じような問題で、アクセス時の画像はget flag1と同じでした。
+ただ、フィルターをちょっと厳しめにしたような問題でした
+ペイロードは、http://[::]:9001/だった気がします。
+ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。
+massive urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。
+後はlogin画面のurlが別にあるような問題でした。
+test@test.comで行ったところ、existとなったので、とりあえずチェックをしてみると、{status: exist, isAdmin: false}のような出力が飛んできました。
+登録時にisAdmin: trueにすればいいだろうと思ったので、Cookie: isAdmin=trueと、body parameterにisAdmin=trueとして送りつけました。
+どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。
+Rev Meow 一番点が低かったので、stringsでフラグげ取れないかなと思いやってみました。
+$file meow meow: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5364dd913e17a0a897677ff1234cbd21547bdd8, for GNU/Linux 4.4.0, not stripped $strings meow strings meow /lib64/ld-linux-x86-64.">
+<meta name=twitter:description content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。
+get flag1だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。
+結果 Web get flag1 アクセスするとこのような画面にいきます。
+URLを入力するようなのでとりあえず、https://example.comを入れると、以下のようになりました。
+ただ、redirectしていると思ったので、open redirect via ssrfとか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。
+SSRFの脆弱性があるところとは別のところにopen redirectがあるとssrfの対策を回避可能みたいな認識なので。
+今回はどうも、指定したURLに対してfetch(?)かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)
+画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)
+ただURLを見てみると、http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com。なので、単純なSSRFを行えば行けるか？と思い、とりあえずhttp://127.0.0.1:9001/flag.txtとしていましたが、
+{&#34;status&#34;:500,&#34;message&#34;:&#34;Error Fetching URL&#34;} のようにエラーが出てきてしまいます。
+まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、http://0.0.0.0:9001/flag.txtとすると、上手くいきました。
+ictf{l0c4l_byp4$$_323theu0a9} get flag2 これも同じような問題で、アクセス時の画像はget flag1と同じでした。
+ただ、フィルターをちょっと厳しめにしたような問題でした
+ペイロードは、http://[::]:9001/だった気がします。
+ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。
+massive urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。
+後はlogin画面のurlが別にあるような問題でした。
+test@test.comで行ったところ、existとなったので、とりあえずチェックをしてみると、{status: exist, isAdmin: false}のような出力が飛んできました。
+登録時にisAdmin: trueにすればいいだろうと思ったので、Cookie: isAdmin=trueと、body parameterにisAdmin=trueとして送りつけました。
+どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。
+Rev Meow 一番点が低かったので、stringsでフラグげ取れないかなと思いやってみました。
+$file meow meow: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5364dd913e17a0a897677ff1234cbd21547bdd8, for GNU/Linux 4.4.0, not stripped $strings meow strings meow /lib64/ld-linux-x86-64."><meta name=twitter:card content="summary"><meta property="article:published_time" content="2023-02-19T21:54:11+09:00"><meta property="article:modified_time" content="2023-02-19T21:54:11+09:00">
+<style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
+<link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
+</head>
+<body data-theme=auto data-theme-auto=false>
+<script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');fujiThemeData?fujiThemeData!=='auto'&&document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light'):localStorage.setItem('fuji_data-theme','auto')</script>
+<header>
+<div class="container-lg clearfix">
+<div class="col-12 header">
+<a class=title-main href=https://se0r12.github.io/>se0r12 blog</a>
+</div>
+</div>
+</header>
+<main>
+<div class="container-lg clearfix">
+<div class="col-12 col-md-9 float-left content">
+<article>
+<h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/incognito_4.0/writeup/>Incognito 4.0 ctf</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-02-19</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/tags/ctf>ctf</a>&nbsp;</span>
+</div>
+<div class="post-content markdown-body">
+<h1 id=incognito-40>Incognito 4.0</h1>
+<h2 id=初めに>初めに。</h2>
+<p>2023/02/18(土)は、<code>Incognito 4.0(ictf)</code>に参加していました。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/219865072-c402c755-4bdd-4b77-a47c-159514f593fe.png alt=image>
+</p>
+<p><code>get flag1</code>だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。</p>
+<h2 id=結果>結果</h2>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/219865581-bba4d8c0-73aa-49d5-80e7-6ed6c73f9fad.png alt=image>
+</p>
+<h2 id=web>Web</h2>
+<h3 id=get-flag1>get flag1</h3>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/219864546-249ec4aa-cc38-463f-8530-b3de3aa676ad.png alt=image>
+</p>
+<p>アクセスするとこのような画面にいきます。</p>
+<p>URLを入力するようなのでとりあえず、<code>https://example.com</code>を入れると、以下のようになりました。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/219864573-192bd923-0027-432d-8947-202fdc159eaf.png alt=image>
+</p>
+<p>ただ、redirectしていると思ったので、<code>open redirect via ssrf</code>とか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。</p>
+<p>SSRFの脆弱性があるところとは別のところに<code>open redirect</code>があるとssrfの対策を回避可能みたいな認識なので。</p>
+<p>今回はどうも、指定したURLに対して<code>fetch(?)</code>かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)</p>
+<p>画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)</p>
+<p>ただURLを見てみると、<code>http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com</code>。なので、単純なSSRFを行えば行けるか？と思い、とりあえず<code>http://127.0.0.1:9001/flag.txt</code>としていましたが、</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{<span style=color:#f92672>&#34;status&#34;</span>:<span style=color:#ae81ff>500</span>,<span style=color:#f92672>&#34;message&#34;</span>:<span style=color:#e6db74>&#34;Error Fetching URL&#34;</span>}
+</code></pre></div><p>のようにエラーが出てきてしまいます。</p>
+<p>まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、<code>http://0.0.0.0:9001/flag.txt</code>とすると、上手くいきました。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>ictf{l0c4l_byp4$$_323theu0a9}
+</code></pre></div><h3 id=get-flag2>get flag2</h3>
+<p>これも同じような問題で、アクセス時の画像は<code>get flag1</code>と同じでした。</p>
+<p>ただ、フィルターをちょっと厳しめにしたような問題でした</p>
+<p>ペイロードは、<code>http://[::]:9001/</code>だった気がします。</p>
+<p>ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。</p>
+<h3 id=massive>massive</h3>
+<p>urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。</p>
+<p>後はlogin画面のurlが別にあるような問題でした。</p>
+<p><code>test@test.com</code>で行ったところ、<code>exist</code>となったので、とりあえずチェックをしてみると、<code>{status: exist, isAdmin: false}</code>のような出力が飛んできました。</p>
+<p>登録時に<code>isAdmin: true</code>にすればいいだろうと思ったので、<code>Cookie: isAdmin=true</code>と、body parameterに<code>isAdmin=true</code>として送りつけました。</p>
+<p>どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。</p>
+<h2 id=rev>Rev</h2>
+<h3 id=meow>Meow</h3>
+<p>一番点が低かったので、<code>strings</code>でフラグげ取れないかなと思いやってみました。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$file meow
+meow: ELF 64-bit LSB pie executable, x86-64, version <span style=color:#ae81ff>1</span> <span style=color:#f92672>(</span>SYSV<span style=color:#f92672>)</span>, dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID<span style=color:#f92672>[</span>sha1<span style=color:#f92672>]=</span>e5364dd913e17a0a897677ff1234cbd21547bdd8, <span style=color:#66d9ef>for</span> GNU/Linux 4.4.0, not stripped
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>$strings meow
+strings meow
+/lib64/ld-linux-x86-64.so.2
+__libc_start_main
+__cxa_finalize
+libc.so.6
+GLIBC_2.2.5
+GLIBC_2.34
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+PTE1
+u3UH
+GCC: <span style=color:#f92672>(</span>GNU<span style=color:#f92672>)</span> 12.2.1 <span style=color:#ae81ff>20230201</span>
+_DYNAMIC
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_start_main@GLIBC_2.34
+_ITM_deregisterTMCloneTable
+_edata
+_fini
+__data_start
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+_end
+__bss_start
+main
+__TMC_END__
+_ITM_registerTMCloneTable
+__cxa_finalize@GLIBC_2.2.5
+_init
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.gnu.property
+.note.gnu.build-id
+.note.ABI-tag
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.init
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.dynamic
+.got
+.got.plt
+.data
+.bss
+.comment
+</code></pre></div><p>悔しい。何もなかった。。。</p>
+<p>とりあえず解析するのは面倒だなと思いまして、<code>chmod</code>するのも面倒なので、<code>.rodate</code>セクションとか、<code>.data</code>とかを見てみようかなと思い、<code>.rodate</code>を見ると</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>px @0x00002000
+- offset -   <span style=color:#ae81ff>0</span> <span style=color:#ae81ff>1</span>  <span style=color:#ae81ff>2</span> <span style=color:#ae81ff>3</span>  <span style=color:#ae81ff>4</span> <span style=color:#ae81ff>5</span>  <span style=color:#ae81ff>6</span> <span style=color:#ae81ff>7</span>  <span style=color:#ae81ff>8</span> <span style=color:#ae81ff>9</span>  A B  C D  E F  0123456789ABCDEF
+0x00002000  <span style=color:#ae81ff>0100</span> <span style=color:#ae81ff>0200</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0069</span> <span style=color:#ae81ff>0063</span> <span style=color:#ae81ff>0074</span> <span style=color:#ae81ff>0066</span>  .........i.c.t.f
+0x00002010  007b <span style=color:#ae81ff>0065</span> <span style=color:#ae81ff>0061</span> <span style=color:#ae81ff>0073</span> <span style=color:#ae81ff>0069</span> <span style=color:#ae81ff>0065</span> <span style=color:#ae81ff>0073</span> <span style=color:#ae81ff>0074</span>  .<span style=color:#f92672>{</span>.e.a.s.i.e.s.t
+0x00002020  005f <span style=color:#ae81ff>0063</span> <span style=color:#ae81ff>0068</span> <span style=color:#ae81ff>0061</span> 006c 006c <span style=color:#ae81ff>0065</span> 006e  ._.c.h.a.l.l.e.n
+0x00002030  <span style=color:#ae81ff>0067</span> <span style=color:#ae81ff>0065</span> 005f 006f <span style=color:#ae81ff>0066</span> 005f <span style=color:#ae81ff>0074</span> <span style=color:#ae81ff>0068</span>  .g.e._.o.f._.t.h
+0x00002040  <span style=color:#ae81ff>0065</span> 006d 005f <span style=color:#ae81ff>0061</span> 006c 006c 007d <span style=color:#ae81ff>0000</span>  .e.m._.a.l.l.<span style=color:#f92672>}</span>..
+0x00002050  011b 033b 1c00 <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0200</span> <span style=color:#ae81ff>0000</span> d0ef ffff  ...;............
+0x00002060  <span style=color:#ae81ff>3800</span> <span style=color:#ae81ff>0000</span> c9f0 ffff <span style=color:#ae81ff>5000</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span>  8.......P.......
+0x00002070  <span style=color:#ae81ff>1400</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span> 017a <span style=color:#ae81ff>5200</span> <span style=color:#ae81ff>0178</span> <span style=color:#ae81ff>1001</span>  .........zR..x..
+0x00002080  1b0c <span style=color:#ae81ff>0708</span> <span style=color:#ae81ff>9001</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>1400</span> <span style=color:#ae81ff>0000</span> 1c00 <span style=color:#ae81ff>0000</span>  ................
+0x00002090  90ef ffff <span style=color:#ae81ff>2600</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0044</span> <span style=color:#ae81ff>0710</span> <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span>  ....&amp;....D......
+0x000020a0  1c00 <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>3400</span> <span style=color:#ae81ff>0000</span> 71f0 ffff <span style=color:#ae81ff>1200</span> <span style=color:#ae81ff>0000</span>  ....4...q.......
+0x000020b0  <span style=color:#ae81ff>0041</span> 0e10 <span style=color:#ae81ff>8602</span> 430d 064d 0c07 <span style=color:#ae81ff>0800</span> <span style=color:#ae81ff>0000</span>  .A....C..M......
+0x000020c0  <span style=color:#ae81ff>0000</span> <span style=color:#ae81ff>0000</span> ffff ffff ffff ffff ffff ffff  ................
+0x000020d0  ffff ffff ffff ffff ffff ffff ffff ffff  ................
+0x000020e0  ffff ffff ffff ffff ffff ffff ffff ffff  ................
+0x000020f0  ffff ffff ffff ffff ffff ffff ffff ffff  ................
+</code></pre></div><p>これじゃね？&lt;=これでした</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>ictf{easiest_challenge_of_them_all}
+</code></pre></div><h2 id=pwn>Pwn</h2>
+<h3 id=babyflow>babyFlow</h3>
+<p>上手く説明できないので割愛</p>
+<p>というのも、ペイロードが荒業感がすごかった。</p>
+<p>Bofのゴミデータの数が特定ができず、運ゲーで通ったようなものだったので&mldr;</p>
+<h2 id=last>last</h2>
+<p>CTFを最近ちゃんとやり始めている中、解ける問題が増えた気がするのは嬉しいですね。。</p>
+<p>ただ初心者向けで自己肯定感を多少上げてくれる心優しいCTFでした感謝。</p>
+</div>
+</article>
+</div>
+<aside class="col-12 col-md-3 float-left sidebar">
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-links">
+<h3>Links</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/tags/archlinux/>Archlinux</a>
+</span>
+<span>
+<a href=/tags/ctf/>ctf</a>
+</span>
+</div>
+</div>
+<div class="sidebar-item sidebar-toc">
+<h3>Table of Contents</h3><nav id=TableOfContents>
+<ul>
+<li><a href=#初めに>初めに。</a></li>
+<li><a href=#結果>結果</a></li>
+<li><a href=#web>Web</a>
+<ul>
+<li><a href=#get-flag1>get flag1</a></li>
+<li><a href=#get-flag2>get flag2</a></li>
+<li><a href=#massive>massive</a></li>
+</ul>
+</li>
+<li><a href=#rev>Rev</a>
+<ul>
+<li><a href=#meow>Meow</a></li>
+</ul>
+</li>
+<li><a href=#pwn>Pwn</a>
+<ul>
+<li><a href=#babyflow>babyFlow</a></li>
+</ul>
+</li>
+<li><a href=#last>last</a></li>
+</ul>
+</nav></div>
+</aside>
+</div>
+<div class=btn>
+<div class=btn-menu id=btn-menu>
+<i class="iconfont icon-grid-sharp"></i>
+</div>
+<div class=btn-toggle-mode>
+<i class="iconfont icon-contrast-sharp"></i>
+</div>
+<div class=btn-scroll-top>
+<i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+</div>
+<aside class=sidebar-mobile style=display:none>
+<div class=sidebar-wrapper>
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-links">
+<h3>Links</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/tags/archlinux/>Archlinux</a>
+</span>
+<span>
+<a href=/tags/ctf/>ctf</a>
+</span>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<footer>
+<div class="container-lg clearfix">
+<div class="col-12 footer">
+<span>&copy; 2023
+<a href=https://se0r12.github.io/></a>
+| Powered by <a href=https://github.com/dsrkafuu/hugo-theme-fuji/ target=_blank>Fuji-v2</a> & <a href=https://gohugo.io/ target=_blank>Hugo</a>
+</span>
+</div>
+</div>
+</footer>
+<script defer src=https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js integrity="sha512-N9IJRoc3LaP3NDoiGkcPa4gG94kapGpaA5Zq9/Dr04uf5TbLFU5q0o8AbRhLKUUlp8QFS2u7S+Yti0U7QtuZvQ==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js integrity="sha512-q583ppKrCRc7N5O0n2nzUiJ+suUv7Et1JGels4bXOaMFQcamPk9HjdUknZuuFjBNs7tsMuadge5k9RzdmO+1GQ==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-core.min.js integrity="sha512-LCKPTo0gtJ74zCNMbWw04ltmujpzSR4oW+fgN+Y1YclhM5ZrHCZQAJE4quEodcI/G122sRhSGU2BsSRUZ2Gu3w==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.27.0/plugins/autoloader/prism-autoloader.min.js integrity="sha512-GP4x8UWxWyh4BMbyJGOGneiTbkrWEF5izsVJByzVLodP8CuJH/n936+yQDMJJrOPUHLgyPbLiGw2rXmdvGdXHA==" crossorigin=anonymous></script>
+<script defer src=/assets/js/fuji.min.c452db0895356f9c44c6ef6c66f8159165623a3eae37655f86a239265e4dccd142d2f221e20bc53a1b7ac769219431c28bd9be196d1189dcbd0af316cd41a644.js integrity="sha512-xFLbCJU1b5xExu9sZvgVkWViOj6uN2VfhqI5Jl5NzNFC0vIh4gvFOht6x2khlDHCi9m+GW0Ridy9CvMWzUGmRA=="></script>
+</body>
+</html>
