@@ -31,6 +31,30 @@
 <div class="col-12 col-md-9 float-left content">
 <div class=post>
 <h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/linectf_2023/writeup/>Line CTF 2023 writeup</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-03-26</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;No tag</span>
+</div>
+<div class="post-item post-summary markdown-body">
+Line CTF 2023 初めに 2023/03/25は、Line CTF 2023に参加していました。
+Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。
+Webもっと解けるようになりたいな(n回目)
+writeup Baby Simple GoCurl アクセスすると、こんな感じの画面が出てきます。
+https://example.comを試しに入れるとこんな感じ。
+コードを見てみると、以下がかなり邪魔しそうです。
+if c.ClientIP() != "127.0.0.1" && (strings.Contains(reqUrl, "flag") || strings.Contains(reqUrl, "curl") || strings.Contains(reqUrl, "%")) { c.JSON(http.StatusBadRequest, gin.H{"message": "Something wrong"}) return } ClinetIP()は文字通り、接続元のIPなので接続元のIPをどうにかして127.0.0.1にしなければならない事がわかります。
+これは、X-Forwarded-Forheaderをつけてあげることで回避ができます。
+X-Forwarded-For: 127.0.0.1 ClientIP()が127.0.0.1になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。
+if false && true => false となるため
+ここまで来たら、ひとまず以下のようにして送ってみます。
+You are a Guest, This is only for Host /flag/にはアクセスできているものの、
+if reqIP == "127.0.0.1" { c.JSON(http.StatusOK, gin.H{ "message": flag, }) return } この部分に引っかかっていなさそうです。
+</div>
+</div>
+<div class=post>
+<h2 class="post-item post-title">
 <a href=https://se0r12.github.io/posts/ctf/hacktm/writeup/>HackTM ctf 2023</a>
 </h2>
 <div class="post-item post-meta">

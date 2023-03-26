@@ -1,0 +1,195 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=HandheldFriendly content="True">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=generator content="Hugo 0.91.2">
+<link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/dsrkafuu/dsr-cdn-main@1/images/favicons/dsrca.ico>
+<title>Line CTF 2023 writeup - se0r12 blog</title>
+<meta property="og:title" content="Line CTF 2023 writeup">
+<meta name=twitter:title content="Line CTF 2023 writeup">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://se0r12.github.io/posts/ctf/linectf_2023/writeup/"><meta property="og:description" content="Line CTF 2023 初めに 2023/03/25は、Line CTF 2023に参加していました。
+Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。
+Webもっと解けるようになりたいな(n回目)
+writeup Baby Simple GoCurl アクセスすると、こんな感じの画面が出てきます。
+https://example.comを試しに入れるとこんな感じ。
+コードを見てみると、以下がかなり邪魔しそうです。
+if c.ClientIP() != &#34;127.0.0.1&#34; && (strings.Contains(reqUrl, &#34;flag&#34;) || strings.Contains(reqUrl, &#34;curl&#34;) || strings.Contains(reqUrl, &#34;%&#34;)) { c.JSON(http.StatusBadRequest, gin.H{&#34;message&#34;: &#34;Something wrong&#34;}) return } ClinetIP()は文字通り、接続元のIPなので接続元のIPをどうにかして127.0.0.1にしなければならない事がわかります。
+これは、X-Forwarded-Forheaderをつけてあげることで回避ができます。
+X-Forwarded-For: 127.0.0.1 ClientIP()が127.0.0.1になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。
+if false && true => false となるため
+ここまで来たら、ひとまず以下のようにして送ってみます。
+You are a Guest, This is only for Host /flag/にはアクセスできているものの、
+if reqIP == &#34;127.0.0.1&#34; { c.JSON(http.StatusOK, gin.H{ &#34;message&#34;: flag, }) return } この部分に引っかかっていなさそうです。">
+<meta name=twitter:description content="Line CTF 2023 初めに 2023/03/25は、Line CTF 2023に参加していました。
+Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。
+Webもっと解けるようになりたいな(n回目)
+writeup Baby Simple GoCurl アクセスすると、こんな感じの画面が出てきます。
+https://example.comを試しに入れるとこんな感じ。
+コードを見てみると、以下がかなり邪魔しそうです。
+if c.ClientIP() != &#34;127.0.0.1&#34; && (strings.Contains(reqUrl, &#34;flag&#34;) || strings.Contains(reqUrl, &#34;curl&#34;) || strings.Contains(reqUrl, &#34;%&#34;)) { c.JSON(http.StatusBadRequest, gin.H{&#34;message&#34;: &#34;Something wrong&#34;}) return } ClinetIP()は文字通り、接続元のIPなので接続元のIPをどうにかして127.0.0.1にしなければならない事がわかります。
+これは、X-Forwarded-Forheaderをつけてあげることで回避ができます。
+X-Forwarded-For: 127.0.0.1 ClientIP()が127.0.0.1になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。
+if false && true => false となるため
+ここまで来たら、ひとまず以下のようにして送ってみます。
+You are a Guest, This is only for Host /flag/にはアクセスできているものの、
+if reqIP == &#34;127.0.0.1&#34; { c.JSON(http.StatusOK, gin.H{ &#34;message&#34;: flag, }) return } この部分に引っかかっていなさそうです。"><meta name=twitter:card content="summary"><meta property="article:published_time" content="2023-03-26T15:57:06+09:00"><meta property="article:modified_time" content="2023-03-26T15:57:06+09:00">
+<style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
+<link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
+</head>
+<body data-theme=auto data-theme-auto=false>
+<script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');fujiThemeData?fujiThemeData!=='auto'&&document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light'):localStorage.setItem('fuji_data-theme','auto')</script>
+<header>
+<div class="container-lg clearfix">
+<div class="col-12 header">
+<a class=title-main href=https://se0r12.github.io/>se0r12 blog</a>
+</div>
+</div>
+</header>
+<main>
+<div class="container-lg clearfix">
+<div class="col-12 col-md-9 float-left content">
+<article>
+<h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/linectf_2023/writeup/>Line CTF 2023 writeup</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-03-26</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;No tag</span>
+</div>
+<div class="post-content markdown-body">
+<h1 id=line-ctf-2023>Line CTF 2023</h1>
+<h2 id=初めに>初めに</h2>
+<p>2023/03/25は、Line CTF 2023に参加していました。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227760524-8053e2b8-9759-4534-a1d7-ce15c3475d31.png alt=image>
+</p>
+<p>Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。</p>
+<p>Webもっと解けるようになりたいな(n回目)</p>
+<h2 id=writeup>writeup</h2>
+<h2 id=baby-simple-gocurl>Baby Simple GoCurl</h2>
+<p>アクセスすると、こんな感じの画面が出てきます。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227760581-bc94bf00-ba75-48b9-bfe7-b3c5b436b9c7.png alt=image>
+</p>
+<p><code>https://example.com</code>を試しに入れるとこんな感じ。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227760654-d05caef8-ed10-4791-83ca-2e7333670f97.png alt=image>
+</p>
+<p>コードを見てみると、以下がかなり邪魔しそうです。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Go data-lang=Go><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ClientIP</span>() <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> <span style=color:#f92672>&amp;&amp;</span> (<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;flag&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;curl&#34;</span>) <span style=color:#f92672>||</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>reqUrl</span>, <span style=color:#e6db74>&#34;%&#34;</span>)) {
+    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#e6db74>&#34;Something wrong&#34;</span>})
+    <span style=color:#66d9ef>return</span>
+}
+</code></pre></div><p><code>ClinetIP()</code>は文字通り、接続元のIPなので接続元のIPをどうにかして<code>127.0.0.1</code>にしなければならない事がわかります。</p>
+<p>これは、<code>X-Forwarded-For</code>headerをつけてあげることで回避ができます。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>X-Forwarded-For: 127.0.0.1
+</code></pre></div><p>ClientIP()が<code>127.0.0.1</code>になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>if</span> <span style=color:#66d9ef>false</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#66d9ef>true</span> =&gt; <span style=color:#66d9ef>false</span>
+</code></pre></div><p>となるため</p>
+<p>ここまで来たら、ひとまず以下のようにして送ってみます。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227761143-69eeaa72-8ef1-4644-a512-7c6c94e48398.png alt=image>
+</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>You are a Guest, This is only for Host
+</code></pre></div><p><code>/flag/</code>にはアクセスできているものの、</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>reqIP</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;127.0.0.1&#34;</span> {
+    <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{
+        <span style=color:#e6db74>&#34;message&#34;</span>: <span style=color:#a6e22e>flag</span>,
+    })
+    <span style=color:#66d9ef>return</span>
+}
+</code></pre></div><p>この部分に引っかかっていなさそうです。</p>
+<p>じゃあ直して。。</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227761663-150964de-3ab0-401b-b304-606753cb25b2.png alt=image>
+</p>
+<p>上手くいってないですね。詰まった末、<code>default port</code>を調べてみると、<code>8080</code>とあったのでportを変えて再度リクエスト、、</p>
+<p><img class=img-zoomable src=https://user-images.githubusercontent.com/93389879/227761739-fcd775e6-1191-48f9-abd0-55b64efe790e.png alt=image>
+</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>LINECTF{6a22ff56112a69f9ba1bfb4e20da5587}
+</code></pre></div><h2 id=最後>最後</h2>
+<p>writeupは終わった後サーバがまだ動いていたので、書きましたが、普通に解法忘れてどうだっけ。になってました。</p>
+</div>
+</article>
+</div>
+<aside class="col-12 col-md-3 float-left sidebar">
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-links">
+<h3>Links</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/tags/ctf/>ctf</a>
+</span>
+</div>
+</div>
+<div class="sidebar-item sidebar-toc">
+<h3>Table of Contents</h3><nav id=TableOfContents>
+<ul>
+<li><a href=#初めに>初めに</a></li>
+<li><a href=#writeup>writeup</a></li>
+<li><a href=#baby-simple-gocurl>Baby Simple GoCurl</a></li>
+<li><a href=#最後>最後</a></li>
+</ul>
+</nav></div>
+</aside>
+</div>
+<div class=btn>
+<div class=btn-menu id=btn-menu>
+<i class="iconfont icon-grid-sharp"></i>
+</div>
+<div class=btn-toggle-mode>
+<i class="iconfont icon-contrast-sharp"></i>
+</div>
+<div class=btn-scroll-top>
+<i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+</div>
+<aside class=sidebar-mobile style=display:none>
+<div class=sidebar-wrapper>
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-links">
+<h3>Links</h3>
+<ul>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/tags/ctf/>ctf</a>
+</span>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<footer>
+<div class="container-lg clearfix">
+<div class="col-12 footer">
+<span>&copy; 2023
+<a href=https://se0r12.github.io/></a>
+| Powered by <a href=https://github.com/dsrkafuu/hugo-theme-fuji/ target=_blank>Fuji-v2</a> & <a href=https://gohugo.io/ target=_blank>Hugo</a>
+</span>
+</div>
+</div>
+</footer>
+<script defer src=https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js integrity="sha512-N9IJRoc3LaP3NDoiGkcPa4gG94kapGpaA5Zq9/Dr04uf5TbLFU5q0o8AbRhLKUUlp8QFS2u7S+Yti0U7QtuZvQ==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js integrity="sha512-q583ppKrCRc7N5O0n2nzUiJ+suUv7Et1JGels4bXOaMFQcamPk9HjdUknZuuFjBNs7tsMuadge5k9RzdmO+1GQ==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.27.0/components/prism-core.min.js integrity="sha512-LCKPTo0gtJ74zCNMbWw04ltmujpzSR4oW+fgN+Y1YclhM5ZrHCZQAJE4quEodcI/G122sRhSGU2BsSRUZ2Gu3w==" crossorigin=anonymous></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.27.0/plugins/autoloader/prism-autoloader.min.js integrity="sha512-GP4x8UWxWyh4BMbyJGOGneiTbkrWEF5izsVJByzVLodP8CuJH/n936+yQDMJJrOPUHLgyPbLiGw2rXmdvGdXHA==" crossorigin=anonymous></script>
+<script defer src=/assets/js/fuji.min.c452db0895356f9c44c6ef6c66f8159165623a3eae37655f86a239265e4dccd142d2f221e20bc53a1b7ac769219431c28bd9be196d1189dcbd0af316cd41a644.js integrity="sha512-xFLbCJU1b5xExu9sZvgVkWViOj6uN2VfhqI5Jl5NzNFC0vIh4gvFOht6x2khlDHCi9m+GW0Ridy9CvMWzUGmRA=="></script>
+</body>
+</html>

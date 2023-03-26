@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>se0r12 blog</title><link>https://se0r12.github.io/</link><description>Recent content on se0r12 blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 19 Feb 2023 21:54:58 +0900</lastBuildDate><atom:link href="https://se0r12.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>HackTM ctf 2023</title><link>https://se0r12.github.io/posts/ctf/hacktm/writeup/</link><pubDate>Sun, 19 Feb 2023 21:54:58 +0900</pubDate><guid>https://se0r12.github.io/posts/ctf/hacktm/writeup/</guid><description>HackTM ctf writeup 2023/02/19(日)はHackTM CTFに参加していました。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>se0r12 blog</title><link>https://se0r12.github.io/</link><description>Recent content on se0r12 blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 26 Mar 2023 15:57:06 +0900</lastBuildDate><atom:link href="https://se0r12.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Line CTF 2023 writeup</title><link>https://se0r12.github.io/posts/ctf/linectf_2023/writeup/</link><pubDate>Sun, 26 Mar 2023 15:57:06 +0900</pubDate><guid>https://se0r12.github.io/posts/ctf/linectf_2023/writeup/</guid><description>Line CTF 2023 初めに 2023/03/25は、Line CTF 2023に参加していました。
+Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。
+Webもっと解けるようになりたいな(n回目)
+writeup Baby Simple GoCurl アクセスすると、こんな感じの画面が出てきます。
+https://example.comを試しに入れるとこんな感じ。
+コードを見てみると、以下がかなり邪魔しそうです。
+if c.ClientIP() != &amp;#34;127.0.0.1&amp;#34; &amp;amp;&amp;amp; (strings.Contains(reqUrl, &amp;#34;flag&amp;#34;) || strings.Contains(reqUrl, &amp;#34;curl&amp;#34;) || strings.Contains(reqUrl, &amp;#34;%&amp;#34;)) { c.JSON(http.StatusBadRequest, gin.H{&amp;#34;message&amp;#34;: &amp;#34;Something wrong&amp;#34;}) return } ClinetIP()は文字通り、接続元のIPなので接続元のIPをどうにかして127.0.0.1にしなければならない事がわかります。
+これは、X-Forwarded-Forheaderをつけてあげることで回避ができます。
+X-Forwarded-For: 127.0.0.1 ClientIP()が127.0.0.1になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。
+if false &amp;amp;&amp;amp; true =&amp;gt; false となるため
+ここまで来たら、ひとまず以下のようにして送ってみます。
+You are a Guest, This is only for Host /flag/にはアクセスできているものの、
+if reqIP == &amp;#34;127.0.0.1&amp;#34; { c.JSON(http.StatusOK, gin.H{ &amp;#34;message&amp;#34;: flag, }) return } この部分に引っかかっていなさそうです。</description></item><item><title>HackTM ctf 2023</title><link>https://se0r12.github.io/posts/ctf/hacktm/writeup/</link><pubDate>Sun, 19 Feb 2023 21:54:58 +0900</pubDate><guid>https://se0r12.github.io/posts/ctf/hacktm/writeup/</guid><description>HackTM ctf writeup 2023/02/19(日)はHackTM CTFに参加していました。
 結果は、
 このような感じでした。
 Webをもっと解けるようにしたい。

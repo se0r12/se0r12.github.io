@@ -13,7 +13,7 @@
 <meta property="og:title" content="Posts">
 <meta name=twitter:title content="Posts">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://se0r12.github.io/posts/"><meta name=twitter:card content="summary"><meta property="og:updated_time" content="2023-02-19T21:54:58+09:00">
+<meta property="og:url" content="https://se0r12.github.io/posts/"><meta name=twitter:card content="summary"><meta property="og:updated_time" content="2023-03-26T15:57:06+09:00">
 <style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
 <link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
 </head>
@@ -29,6 +29,30 @@
 <main>
 <div class="container-lg clearfix">
 <div class="col-12 col-md-9 float-left content">
+<div class=post>
+<h2 class="post-item post-title">
+<a href=https://se0r12.github.io/posts/ctf/linectf_2023/writeup/>Line CTF 2023 writeup</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2023-03-26</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;No tag</span>
+</div>
+<div class="post-item post-summary markdown-body">
+Line CTF 2023 初めに 2023/03/25は、Line CTF 2023に参加していました。
+Baby Simple GoCurlしか解けませんでしたが、頭を使って楽しかったです。
+Webもっと解けるようになりたいな(n回目)
+writeup Baby Simple GoCurl アクセスすると、こんな感じの画面が出てきます。
+https://example.comを試しに入れるとこんな感じ。
+コードを見てみると、以下がかなり邪魔しそうです。
+if c.ClientIP() != "127.0.0.1" && (strings.Contains(reqUrl, "flag") || strings.Contains(reqUrl, "curl") || strings.Contains(reqUrl, "%")) { c.JSON(http.StatusBadRequest, gin.H{"message": "Something wrong"}) return } ClinetIP()は文字通り、接続元のIPなので接続元のIPをどうにかして127.0.0.1にしなければならない事がわかります。
+これは、X-Forwarded-Forheaderをつけてあげることで回避ができます。
+X-Forwarded-For: 127.0.0.1 ClientIP()が127.0.0.1になった事が確認出来たら、先ほどの邪魔しそうな部分が回避できることがわかります。
+if false && true => false となるため
+ここまで来たら、ひとまず以下のようにして送ってみます。
+You are a Guest, This is only for Host /flag/にはアクセスできているものの、
+if reqIP == "127.0.0.1" { c.JSON(http.StatusOK, gin.H{ "message": flag, }) return } この部分に引っかかっていなさそうです。
+</div>
+</div>
 <div class=post>
 <h2 class="post-item post-title">
 <a href=https://se0r12.github.io/posts/ctf/hacktm/writeup/>HackTM ctf 2023</a>
