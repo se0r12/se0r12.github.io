@@ -1,6 +1,7 @@
 ---
 title: "Sekai CTF 2023"
 date: 2023-08-29T18:06:28+09:00
+tags: ["ctf"]
 draft: false
 ---
 

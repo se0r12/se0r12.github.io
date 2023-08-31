@@ -1,6 +1,7 @@
 ---
 title: "Line CTF 2023 writeup"
 date: 2023-03-26T15:57:06+09:00
+tags: ["ctf"]
 draft: false
 ---
 
