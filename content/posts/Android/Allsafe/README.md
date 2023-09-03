@@ -13,11 +13,17 @@ draft: true
   - [Firebase Database](#firebase-database)
   - [Insecure Shared Preferences](#insecure-shared-preferences)
   - [SQL injection](#sql-injection)
-- [PIN Bypass](#pin-bypass)
+  - [PIN Bypass](#pin-bypass)
     - [frida を使用したブルートフォースの探索](#frida-を使用したブルートフォースの探索)
     - [password が間違っていてもあっている判定をさせる](#password-が間違っていてもあっている判定をさせる)
   - [Root Detection](#root-detection)
   - [Secure Flag Bypass](#secure-flag-bypass)
+  - [Deep Link Exploitation](#deep-link-exploitation)
+  - [Insecure Broadcat Receiver](#insecure-broadcat-receiver)
+- [Vulnerability WebView](#vulnerability-webview)
+  - [XSSを起こす](#xssを起こす)
+  - [LFIを起こす](#lfiを起こす)
+- [Certificate Pinning](#certificate-pinning)
 
 ## Insecure Logging
 
@@ -166,7 +172,7 @@ adb shell input text "\'\ or\ \'a\'=\'a\'\-\-"
 
 コレにより、色々な認証情報が浮かび上がります。
 
-# PIN Bypass
+## PIN Bypass
 
 ```java
 EditText editText2 = pin;
@@ -289,4 +295,172 @@ if (Java.available) {
 Secure Flag Bypassの画面は、スクリーンショットを禁じられている。
 
 コレは技術的には脆弱性ではないはず。
+
+## Deep Link Exploitation
+
+`DeeplinkTask.java`
+```java
+public class DeepLinkTask extends AppCompatActivity {
+    /* JADX WARN: Multi-variable type inference failed */
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_deep_link_task);
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        Log.d("ALLSAFE", "Action: " + action + " Data: " + data);
+        try {
+            if (data.getQueryParameter("key").equals(getString(R.string.key))) {
+                findViewById(2131296383).setVisibility(0);
+                SnackUtil.INSTANCE.simpleMessage(this, "Good job, you did it!");
+            } else {
+                SnackUtil.INSTANCE.simpleMessage(this, "Wrong key, try harder!");
+            }
+        } catch (Exception e) {
+            SnackUtil.INSTANCE.simpleMessage(this, "No key provided!");
+            Log.e("ALLSAFE", e.getMessage());
+        }
+    }
+}
+```
+
+ここでは、`key`を、`string.xml`内のkeyと比較していそうです。
+
+```xml
+<string name="key">ebfb7ff0-b2f6-41c8-bef3-4fba17be410c</string>
+```
+
+`AndoridManifest.xml`をみて、ディープリンクを確認してみます。
+
+```xml
+        <activity android:name="infosecadventures.allsafe.challenges.DeepLinkTask" android:theme="@style/Theme.Allsafe.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="infosecadventures" android:pathPrefix="/congrats" android:scheme="allsafe"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"/>
+            </intent-filter>
+        </activity>
+```
+
+- host: infosecadventures
+- pathPrefix: /congrats
+- scheme: allsafe
+
+`allsafe:infosecadventures/congrats?key=ebfb7ff0-b2f6-41c8-bef3-4fba17be410c`
+
+にアクセスをすれば良さそう。
+
+```bash
+adb shell am start -a "android.intent.action.VIEW" -d "allsafe://infosecadventures/congrats?key=ebfb7ff0-b2f6-41c8-bef3-4fba17be410c"
+```
+
+## Insecure Broadcat Receiver
+
+`AndoridManifest.xml`を見てみる。
+
+```xml
+<receiver android:exported="true" android:name="infosecadventures.allsafe.challenges.NoteReceiver">
+    <intent-filter>
+        <action android:name="infosecadventures.allsafe.action.PROCESS_NOTE"/>
+    </intent-filter>
+</receiver>
+```
+
+`NoteReceiver.java`
+```java
+public class NoteReceiver extends BroadcastReceiver {
+    @Override // android.content.BroadcastReceiver
+    public void onReceive(Context context, Intent intent) {
+        String server = intent.getStringExtra("server");
+        String note = intent.getStringExtra("note");
+        String notification_message = intent.getStringExtra("notification_message");
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        HttpUrl httpUrl = new HttpUrl.Builder().scheme("http").host(server).addPathSegment("api").addPathSegment("v1").addPathSegment("note").addPathSegment("add").addQueryParameter("auth_token", "YWxsc2FmZV9kZXZfYWRtaW5fdG9rZW4=").addQueryParameter("note", note).build();
+        Log.d("ALLSAFE", httpUrl.toString());
+        Request request = new Request.Builder().url(httpUrl).build();
+        okHttpClient.newCall(request).enqueue(new Callback() { // from class: infosecadventures.allsafe.challenges.NoteReceiver.1
+            public void onFailure(Call call, IOException e) {
+                Log.d("ALLSAFE", e.getMessage());
+            }
+
+            public void onResponse(Call call, Response response) throws IOException {
+                ResponseBody body = response.body();
+                Objects.requireNonNull(body);
+                Log.d("ALLSAFE", body.string());
+            }
+        });
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ALLSAFE");
+        builder.setContentTitle("Notification from Allsafe");
+        builder.setContentText(notification_message);
+        builder.setSmallIcon((int) R.mipmap.ic_launcher_round);
+        builder.setAutoCancel(true);
+        builder.setChannelId("ALLSAFE");
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        NotificationChannel notificationChannel = new NotificationChannel("ALLSAFE", "ALLSAFE_NOTIFICATION", 4);
+        notificationManager.createNotificationChannel(notificationChannel);
+        notificationManager.notify(1, notification);
+    }
+}
+```
+
+`server`, `note`, `notification_message`を受け取り
+
+`http://<server>/api/v1/note/add?auth_token=YWxsc2FmZV9kZXZfYWRtaW5fdG9rZW4=&note=<note>`というURLを組み立てます。
+
+その後レスポンスを`log`に出力するだけです。
+
+どちらかというと、`notification_message`の方が悪用できそうです。
+
+```java
+ NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "ALLSAFE");
+        builder.setContentTitle("Notification from Allsafe");
+        builder.setContentText(notification_message);
+        builder.setSmallIcon((int) R.mipmap.ic_launcher_round);
+        builder.setAutoCancel(true);
+        builder.setChannelId("ALLSAFE");
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService("notification");
+        NotificationChannel notificationChannel = new NotificationChannel("ALLSAFE", "ALLSAFE_NOTIFICATION", 4);
+        notificationManager.createNotificationChannel(notificationChannel);
+        notificationManager.notify(1, notification);
+```
+
+noteを保存したとき、通知が出ることからこの処理がそれを担当しているはずです。
+
+というわけで、以下のコマンドを実行します。
+
+```bash
+adb shell am broadcast -a "infosecadventures.allsafe.action.PROCESS_NOTE" --es server "127.0.0.1" --es note "hoge" --es notification_message "custom_message" -n infosecadventures.allsafe/.challenges.NoteReceiver
+```
+
+実行すると、`custom_message`と書かれた通知が飛ぶはずです。
+
+# Vulnerability WebView
+
+## XSSを起こす
+ 
+codeを見なくても解ける問題です。
+
+`<script>alert(1)</script>`を入力すると、ポップアップが出るはずです。
+
+## LFIを起こす
+
+LFIなのかDirectory Traversalなのかはファイルタイプによるはずなので怪しいですが、まぁローカルのファイルにアクセスができます
+
+`file:///etc/hosts`を入力すると、`/etc/hosts`ファイルの中身が見えるはずです。
+
+# Certificate Pinning
+
+BurpなりでRequestをみる必要があるようです。
+
+
+
 
