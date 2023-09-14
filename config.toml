@@ -1,4 +1,10 @@
 baseURL = 'https://se0r12.github.io/'
 languageCode = 'en-us'
-title = 'se0r12 blog'
+title = 'blog'
 theme = "fuji"
+author = "se0r12"
+googleAnalytics = "UA-285165062-1"
+paginate = 30
+defaultContentLanguage = "ja"
+hasCJKLanguage = true
+
