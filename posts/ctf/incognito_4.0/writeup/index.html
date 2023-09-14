@@ -1,4 +1,4 @@
-<!doctype html><html lang=en>
+<!doctype html><html lang=ja>
 <head>
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
@@ -8,64 +8,24 @@
 <meta http-equiv=cache-control content="no-siteapp">
 <meta name=generator content="Hugo 0.91.2">
 <link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/dsrkafuu/dsr-cdn-main@1/images/favicons/dsrca.ico>
-<title>Incognito 4.0 ctf - se0r12 blog</title>
+<title>Incognito 4.0 ctf - blog</title>
 <meta name=keywords content="ctf">
 <meta property="og:title" content="Incognito 4.0 ctf">
 <meta name=twitter:title content="Incognito 4.0 ctf">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://se0r12.github.io/posts/ctf/incognito_4.0/writeup/"><meta property="og:description" content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。
-get flag1だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。
-結果 Web get flag1 アクセスするとこのような画面にいきます。
-URLを入力するようなのでとりあえず、https://example.comを入れると、以下のようになりました。
-ただ、redirectしていると思ったので、open redirect via ssrfとか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。
-SSRFの脆弱性があるところとは別のところにopen redirectがあるとssrfの対策を回避可能みたいな認識なので。
-今回はどうも、指定したURLに対してfetch(?)かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)
-画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)
-ただURLを見てみると、http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com。なので、単純なSSRFを行えば行けるか？と思い、とりあえずhttp://127.0.0.1:9001/flag.txtとしていましたが、
-{&#34;status&#34;:500,&#34;message&#34;:&#34;Error Fetching URL&#34;} のようにエラーが出てきてしまいます。
-まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、http://0.0.0.0:9001/flag.txtとすると、上手くいきました。
-ictf{l0c4l_byp4$$_323theu0a9} get flag2 これも同じような問題で、アクセス時の画像はget flag1と同じでした。
-ただ、フィルターをちょっと厳しめにしたような問題でした
-ペイロードは、http://[::]:9001/だった気がします。
-ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。
-massive urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。
-後はlogin画面のurlが別にあるような問題でした。
-test@test.comで行ったところ、existとなったので、とりあえずチェックをしてみると、{status: exist, isAdmin: false}のような出力が飛んできました。
-登録時にisAdmin: trueにすればいいだろうと思ったので、Cookie: isAdmin=trueと、body parameterにisAdmin=trueとして送りつけました。
-どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。
-Rev Meow 一番点が低かったので、stringsでフラグげ取れないかなと思いやってみました。
-$file meow meow: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5364dd913e17a0a897677ff1234cbd21547bdd8, for GNU/Linux 4.4.0, not stripped $strings meow strings meow /lib64/ld-linux-x86-64.">
-<meta name=twitter:description content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。
-get flag1だけは、問題を見ながらのwriteupが書けましたが、21:00で終わると思っていなかったため、残りはうろ覚えです。
-結果 Web get flag1 アクセスするとこのような画面にいきます。
-URLを入力するようなのでとりあえず、https://example.comを入れると、以下のようになりました。
-ただ、redirectしていると思ったので、open redirect via ssrfとか？と思ったのですが、全然違いました。し、そもそも行えるのかが疑問です。
-SSRFの脆弱性があるところとは別のところにopen redirectがあるとssrfの対策を回避可能みたいな認識なので。
-今回はどうも、指定したURLに対してfetch(?)かなんかでgetした内容をそのまま表示しているっぽい？(間違っているかも)
-画面が変わっていたので、リダイレクトしているんだろうと先入観に囚われ、諦めそうでした。(どうせ私にはわからんやろなって)
-ただURLを見てみると、http://45.79.210.216:5000/getUrl?url=http%3A%2F%2Fexample.com。なので、単純なSSRFを行えば行けるか？と思い、とりあえずhttp://127.0.0.1:9001/flag.txtとしていましたが、
-{&#34;status&#34;:500,&#34;message&#34;:&#34;Error Fetching URL&#34;} のようにエラーが出てきてしまいます。
-まぁそりゃそうかと思いつつ、ペイロードをちょっと換えて、http://0.0.0.0:9001/flag.txtとすると、上手くいきました。
-ictf{l0c4l_byp4$$_323theu0a9} get flag2 これも同じような問題で、アクセス時の画像はget flag1と同じでした。
-ただ、フィルターをちょっと厳しめにしたような問題でした
-ペイロードは、http://[::]:9001/だった気がします。
-ただペイロードを何のひねりも入れずちょっと変えるだけだったので問題なかったです。
-massive urlにアクセスすると、メールアドレス、パスワードを使用して登録できるフォームと、メールアドレスが登録されているかをチェックできるフォーム。
-後はlogin画面のurlが別にあるような問題でした。
-test@test.comで行ったところ、existとなったので、とりあえずチェックをしてみると、{status: exist, isAdmin: false}のような出力が飛んできました。
-登録時にisAdmin: trueにすればいいだろうと思ったので、Cookie: isAdmin=trueと、body parameterにisAdmin=trueとして送りつけました。
-どっちが正解だったかは試していない(試そうとしたら終わってた)のですが、多分bodyだろうなと思います。
-Rev Meow 一番点が低かったので、stringsでフラグげ取れないかなと思いやってみました。
-$file meow meow: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=e5364dd913e17a0a897677ff1234cbd21547bdd8, for GNU/Linux 4.4.0, not stripped $strings meow strings meow /lib64/ld-linux-x86-64."><meta name=twitter:card content="summary"><meta property="article:published_time" content="2023-02-19T21:54:11+09:00"><meta property="article:modified_time" content="2023-02-19T21:54:11+09:00">
+<meta property="og:url" content="https://se0r12.github.io/posts/ctf/incognito_4.0/writeup/"><meta property="og:description" content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。 get flag1だけは、問題を見ながらのwri">
+<meta name=twitter:description content="Incognito 4.0 初めに。 2023/02/18(土)は、Incognito 4.0(ictf)に参加していました。 get flag1だけは、問題を見ながらのwri"><meta name=twitter:card content="summary"><meta property="article:published_time" content="2023-02-19T21:54:11+09:00"><meta property="article:modified_time" content="2023-02-19T21:54:11+09:00">
 <style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
 <link rel=stylesheet href=https://se0r12.github.io/assets/css/fuji.min.b4a21b5d3eb1d0a51297e31230a65fc25e387843e45ec3a2d9176cd8d163c216d99b9b13a618b28f537c3b559ec8a408183b0fbfad48daddb9befa7d3ef90eed.css integrity="sha512-tKIbXT6x0KUSl+MSMKZfwl44eEPkXsOi2Rds2NFjwhbZm5sTphiyj1N8O1WeyKQIGDsPv61I2t25vvp9PvkO7Q==">
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-285165062-1')</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-285165062-1"></script>
 </head>
 <body data-theme=auto data-theme-auto=false>
 <script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');fujiThemeData?fujiThemeData!=='auto'&&document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light'):localStorage.setItem('fuji_data-theme','auto')</script>
 <header>
 <div class="container-lg clearfix">
 <div class="col-12 header">
-<a class=title-main href=https://se0r12.github.io/>se0r12 blog</a>
+<a class=title-main href=https://se0r12.github.io/>blog</a>
 </div>
 </div>
 </header>
@@ -217,17 +177,17 @@ _init
 </div>
 <aside class="col-12 col-md-3 float-left sidebar">
 <div class="sidebar-item sidebar-pages">
-<h3>Pages</h3>
+<h3>ページ</h3>
 <ul>
 </ul>
 </div>
 <div class="sidebar-item sidebar-links">
-<h3>Links</h3>
+<h3>リンク</h3>
 <ul>
 </ul>
 </div>
 <div class="sidebar-item sidebar-tags">
-<h3>Tags</h3>
+<h3>タグ</h3>
 <div>
 <span>
 <a href=/tags/ctf/>ctf</a>
@@ -235,7 +195,7 @@ _init
 </div>
 </div>
 <div class="sidebar-item sidebar-toc">
-<h3>Table of Contents</h3><nav id=TableOfContents>
+<h3>目次</h3><nav id=TableOfContents>
 <ul>
 <li><a href=#初めに>初めに。</a></li>
 <li><a href=#結果>結果</a></li>
@@ -275,17 +235,17 @@ _init
 <aside class=sidebar-mobile style=display:none>
 <div class=sidebar-wrapper>
 <div class="sidebar-item sidebar-pages">
-<h3>Pages</h3>
+<h3>ページ</h3>
 <ul>
 </ul>
 </div>
 <div class="sidebar-item sidebar-links">
-<h3>Links</h3>
+<h3>リンク</h3>
 <ul>
 </ul>
 </div>
 <div class="sidebar-item sidebar-tags">
-<h3>Tags</h3>
+<h3>タグ</h3>
 <div>
 <span>
 <a href=/tags/ctf/>ctf</a>
