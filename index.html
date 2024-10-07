@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>se0r12.github.io</title>
+        <style>
+        table {
+            width: 20%;
+            border-collapse: collapse; /* テーブルの枠を重ねて表示 */
+            font-family: monospace; /* 等幅フォントを指定 */
+        }
+        th, td {
+            padding: 3px; /* セル内のパディング */
+            text-align: left; /* テキストを左揃え */
+        }
+        </style>
+    </head>
+
+    <body>
+        <pre>
+        .-')      ('-.           _  .-')                  
+( OO ).  _(  OO)         ( \( -O )                 
+(_)---\_)(,------. .----.  ,------.  .---. .-----.  
+/    _ |  |  .---'/  ..  \ |   /`. '/_   |/ ,-.   \ 
+\  :` `.  |  |   .  /  \  .|  /  | | |   |'-'  |  | 
+'..`''.)(|  '--.|  |  '  ||  |_.' | |   |   .'  /  
+.-._)   \ |  .--''  \  /  '|  .  '.' |   | .'  /__  
+\       / |  `---.\  `'  / |  |\  \  |   ||       | 
+`-----'  `------' `---''  `--' '--' `---'`-------' 
+        </pre>
+        <pre id="time"></pre>
+        <table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>None</td>
+            <td><a href="about.md">about</a></td>
+        </tr>
+    </tbody>
+</table>
+        <script>
+            const setTime = () => {
+                let now = new Date();
+                document.getElementById("time").textContent = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDay()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+            }
+            setTime();
+            setInterval(setTime, 1000);
+        </script>
+    </body>
+</html>
