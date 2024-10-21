@@ -22,21 +22,33 @@
         <pre id="ascii-art">
         </pre>
         <pre id="time"></pre>
+        <pre id="data" style="background-color: gray; white-space: pre-wrap;"></pre>
         <table>
-    <thead>
-        <tr>
-            <th>Category</th>
-            <th>Title</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>None</td>
-            <td><a href="about.md">about</a></td>
-        </tr>
-    </tbody>
-</table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Title</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>None</td>
+                    <td><a href="/about.md" onclick="show(this);return false">about</a></td>
+                </tr>
+                <tr>
+                    <td>CTF</td>
+                    <td><a href="./ctf/Hack.luCTF2024/README.md" onclick="show(this);return false">Hack.lu CTF 2024</a></td>
+                </tr>
+            </tbody>
+        </table>
         <script>
+            const dataElm = document.getElementById("data");
+            const show = async (elm) => {
+                const url = elm.href;
+                const path = (new URL(url)).pathname;
+                location.hash=path;
+                fetch(path).then(response => response.text()).then(data => dataElm.textContent=data);
+            }
             const setTime = () => {
                 let now = new Date();
                 document.getElementById("time").textContent = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
