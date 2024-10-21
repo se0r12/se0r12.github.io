@@ -16,22 +16,49 @@
         </style>
         <script src="/js/ascii.js" defer></script>
         <script src="/js/table.js"></script>
+        <script src=" https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js "></script>
     </head>
 
     <body>
         <pre id="ascii-art" style="font-size: small;">
         </pre>
         <pre id="time"></pre>
-        <pre id="data" style="background-color:cornsilk; white-space: pre-wrap;"></pre>
+        <pre id="data"></pre>
+        <div style="font-family: monospace;">
+            (<a href="#" style="font-family: monospace;" onclick="setMode('html');return false">html</a>|<a href="#" style="font-family: monospace;" onclick="setMode('md');return false">md</a>)
+        </div>
         <script>
+            const md = window.markdownit();
+            let mode = "md";
             const dataElm = document.getElementById("data");
+
+            const drawData = (path) =>{
+                fetch(path).then(response => response.text()).then(data => {
+                    if (mode === "md") {
+                        dataElm.textContent=data
+                        dataElm.setAttribute("style", "background-color:cornsilk; white-space: pre-wrap; padding: 2px; border: 1px solid #888");
+                    } else {
+                        dataElm.innerHTML = md.render(data);
+                        dataElm.setAttribute("style", "background-color:cornsilk; white-space: pre-wrap; padding: 2px; border: 1px solid #888");
+                    }
+                }).catch(err => alert(err));
+            }
+
             const show = async (elm) => {
                 const url = elm.href;
                 const path = (new URL(url)).pathname;
                 location.hash=path;
-                fetch(path).then(response => response.text()).then(data => dataElm.textContent=data);
+                drawData(path);
             }
 
+            const setMode = (after) => {
+                const before = mode;
+                mode = after;
+                if (dataElm.innerText !== "" && before !== after) {
+                    const path = location.hash.slice(1);
+                    drawData(path);
+                }
+            }
             class BlogData {
                 constructor(category, title, path) {
                     this.category = category;

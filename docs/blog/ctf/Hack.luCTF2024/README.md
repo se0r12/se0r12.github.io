@@ -7,7 +7,10 @@ https://ctftime.org/event/2438
 ## BUFFZONE (web)
 
 他の問題が多くて4 solveなのに、こいつは103 solveとかなり解かれていた。
+
 (から解けてよかった。)
+
+![](/blog/ctf/Hack.luCTF2024/2024-10-21-16-39-18.png)
 
 ```js
 // app.js
