@@ -6,7 +6,6 @@
         <title>se0r12.github.io</title>
         <style>
         table {
-            width: 10%;
             border-collapse: collapse; /* テーブルの枠を重ねて表示 */
             font-family: monospace; /* 等幅フォントを指定 */
         }
@@ -16,31 +15,14 @@
         }
         </style>
         <script src="/js/ascii.js" defer></script>
+        <script src="/js/table.js"></script>
     </head>
 
     <body>
-        <pre id="ascii-art">
+        <pre id="ascii-art" style="font-size: small;">
         </pre>
         <pre id="time"></pre>
-        <pre id="data" style="background-color: gray; white-space: pre-wrap;"></pre>
-        <table>
-            <thead>
-                <tr>
-                    <th>Category</th>
-                    <th>Title</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>None</td>
-                    <td><a href="/about.md" onclick="show(this);return false">about</a></td>
-                </tr>
-                <tr>
-                    <td>CTF</td>
-                    <td><a href="./ctf/Hack.luCTF2024/README.md" onclick="show(this);return false">Hack.lu CTF 2024</a></td>
-                </tr>
-            </tbody>
-        </table>
+        <pre id="data" style="background-color:cornsilk; white-space: pre-wrap;"></pre>
         <script>
             const dataElm = document.getElementById("data");
             const show = async (elm) => {
@@ -49,6 +31,25 @@
                 location.hash=path;
                 fetch(path).then(response => response.text()).then(data => dataElm.textContent=data);
             }
+
+            class BlogData {
+                constructor(category, title, path) {
+                    this.category = category;
+                    this.title = title;
+                    this.path = path;
+                }
+            };
+            const categories = {
+                CTF: "ctf",
+                None: "none",
+            }
+            const blogs = [
+                new BlogData(categories.None, "about", "./blog/none/about/README.md"),
+                new BlogData(categories.CTF, "Hack.lu CTF 2024 Writeup", "./blog/ctf/Hack.luCTF2024/README.md"),
+                new BlogData(categories.None, "ブログを作った話。", "./blog/none/ブログを作った話/README.md"),
+            ];
+            draw(blogs);
+
             const setTime = () => {
                 let now = new Date();
                 document.getElementById("time").textContent = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
