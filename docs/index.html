@@ -33,7 +33,7 @@
             const dataElm = document.getElementById("data");
 
             const drawData = (path) =>{
-                fetch(path).then(response => response.text()).then(data => {
+                fetch((new URL(location.href)).origin+path).then(response => response.text()).then(data => {
                     if (mode === "md") {
                         dataElm.textContent=data
                         dataElm.setAttribute("style", "background-color:cornsilk; white-space: pre-wrap; padding: 2px; border: 1px solid #888");
