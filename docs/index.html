@@ -59,23 +59,10 @@
                     drawData(path);
                 }
             }
-            class BlogData {
-                constructor(category, title, path) {
-                    this.category = category;
-                    this.title = title;
-                    this.path = path;
-                }
-            };
-            const categories = {
-                CTF: "ctf",
-                None: "none",
-            }
-            const blogs = [
-                new BlogData(categories.None, "about", "./blog/none/about/README.md"),
-                new BlogData(categories.CTF, "Hack.lu CTF 2024 Writeup", "./blog/ctf/Hack.luCTF2024/README.md"),
-                new BlogData(categories.None, "ブログを作った話。", "./blog/none/ブログを作った話/README.md"),
-            ];
-            draw(blogs);
+            fetch("/blogs.txt").then(resp=>resp.text()).then(content=>{
+                const blogs = content.split("\n").map(line => line.split(",")).filter(blogData=>blogData.length === 3);
+                createBlogTables(blogs);
+            });
 
             const setTime = () => {
                 let now = new Date();

@@ -1,13 +1,16 @@
-function draw(blogs) {
+function createBlogTables(blogs) {
     blogs.forEach(blog => {
         const tr = document.createElement("tr");
         const td_category = document.createElement("td");
         const td_title = document.createElement("td");
         const a = document.createElement("a");
-        a.setAttribute("href", blog.path);
+        const blogCategory = blog[0];
+        const blogTitle = blog[1];
+        const blogPath = blog[2].replace(/\/?docs/, "");
+        a.setAttribute("href", blogPath);
         a.setAttribute("onclick", "show(this);return false;");
-        a.textContent = blog.title;
-        td_category.textContent = blog.category;
+        a.textContent = blogTitle;
+        td_category.textContent = blogCategory;
         td_title.appendChild(a);
         tr.appendChild(td_category);
         tr.appendChild(td_title);
@@ -27,4 +30,3 @@ tr.appendChild(th_category);
 tr.appendChild(th_title);
 table.tHead.appendChild(tr);
 table.appendChild(document.createElement("tbody"));
-
