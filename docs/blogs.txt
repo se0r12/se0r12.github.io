@@ -2,3 +2,4 @@ none,about,docs/blog/none/about/README.md
 ctf,Imaginary CTF 2024 Writeup,docs/blog/ctf/ImaginaryCTF_2024/README.md
 ctf,Hack.lu CTF 2024 Writeup,docs/blog/ctf/Hack.luCTF2024/README.md
 none,ブログを作った話。,docs/blog/none/ブログを作った話/README.md
+ctf,HKCERT CTF 2024 (Qualifying Round) writeup,docs/blog/ctf/HKCERTCTF2024/README.md
