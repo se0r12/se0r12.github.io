@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title></title>
+    <title>blog...</title>
     <link>http://localhost:1313/</link>
-    <description>Recent content on </description>
+    <description>Recent content on blog...</description>
     <generator>Hugo</generator>
     <language>en-us</language>
+    <lastBuildDate>Fri, 28 Mar 2025 20:54:17 +0900</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ping</title>
+      <link>http://localhost:1313/posts/ping/</link>
+      <pubDate>Fri, 28 Mar 2025 20:54:17 +0900</pubDate>
+      <guid>http://localhost:1313/posts/ping/</guid>
+      <description>&lt;h2 id=&#34;h2&#34;&gt;h2&lt;/h2&gt;&#xA;&lt;h3 id=&#34;h3&#34;&gt;h3&lt;/h3&gt;&#xA;&lt;h4 id=&#34;h4&#34;&gt;h4&lt;/h4&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;print(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;うー&lt;/strong&gt; &lt;code&gt;\(*_*)/&lt;/code&gt; &lt;em&gt;ﾜｰ&lt;/em&gt;&lt;/p&gt;&#xA;&lt;p&gt;引用: CTFむずすぎより。&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;ctf むずすぎー&lt;/p&gt;&lt;/blockquote&gt;</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/posts/about/</link>
+      <pubDate>Fri, 28 Mar 2025 19:19:05 +0900</pubDate>
+      <guid>http://localhost:1313/posts/about/</guid>
+      <description>&lt;ul&gt;&#xA;&lt;li&gt;X (twitter): &lt;a href=&#34;https://x.com/se0r12&#34;&gt;https://x.com/se0r12&lt;/a&gt;__&lt;/li&gt;&#xA;&lt;li&gt;GitHub: &lt;a href=&#34;https://github.com/se0r12&#34;&gt;https://github.com/se0r12&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
   </channel>
 </rss>

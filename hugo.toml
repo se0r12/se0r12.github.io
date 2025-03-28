@@ -1,6 +1,6 @@
-baseURL = 'https://se0r12.github.io'
+baseURL = 'https://example.org'
 languageCode = 'en-us'
-title = 'se0r12'
+title = 'blog...'
 theme = "blank"
 [caches]
     [caches.images]
