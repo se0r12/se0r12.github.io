@@ -1,3 +1,9 @@
 [submodule "themes/blank"]
 	path = themes/blank
 	url = https://github.com/se0r12/blank.git
+[submodule "thmes/blank"]
+	path = thmes/blank
+	url = https://github.com/se0r12/blank.git
+[submodule "themes/blnak"]
+	path = themes/blnak
+	url = https://github.com/se0r12/blank.git
