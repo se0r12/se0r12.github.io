@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Feedbotを作った話</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+</head>
+<body>
+	<header>
+	
+
+</header>
+
+	
+	<main>
+		<article>
+			<h1>Feedbotを作った話</h1>
+			<div>
+				<p>セキュリティの最新技術を追うために、<a href="https://feedly.com/">Feedly</a>を利用していた。</p>
+<p>ただし、無料版だと検索ができないから、「あの記事どこでみたんだっけな」という問題に対処ができなくて、少し辛い思いをしていた。<br>
+もちろん決まったいくつかのサイトしか見ていなかったので、全てのサイトで断片的な情報を検索すれば見つかるわけだが、そんなことをするのはめんどくさい。</p>
+<p>また、Feedlyをわざわざ開かないという問題があった。<br>
+人間 (というか私)は、基本的にいつも使うアプリしか開かない。<br>
+習慣化すればいいのだが、なかなか上手くいかなかった。<br>
+おそらく、「記事を読むぞ！」という気持ちになかなかなれないのが原因。</p>
+<p>技術ブログを見るときは「読むぞ」より「目についたし面白そうだから読むか」くらいの気持ちで基本的に見ているので、「読むぞ」という気持ちを持たないで開けるアプリケーションにFeedを送りたかった。</p>
+<p>さて、現在出た問題は二つ</p>
+<ul>
+<li>Feedlyは検索機能を無料版だと持たない</li>
+<li>読むぞという気持ちを持たないで記事が目につく環境が欲しい</li>
+</ul>
+<p>これを解決できそうなアプリケーション。。それはDiscordだ！となった。</p>
+<p>はい。前置きが長くなりましたが、DiscordにFeedBotを作成しましたよという話。</p>
+<h2 id="環境">環境</h2>
+<p>今回は、Google Cloud上で作成した。</p>
+<p>理由としては、Cloudに今まで触れてこなかったが、今の仕事では理解しておかないとかなり辛くなりそうだったから、試しに使ってみるかという気持ちで。</p>
+<p>使ったGoogle Cloudのサービスは以下3点</p>
+<ul>
+<li>Google Cloud Functions (Google Cloud Run Functionsって名前になったのかな)</li>
+<li>Cloud Storage</li>
+<li>Cloud Scheduler</li>
+</ul>
+<p>ざっくりどういう処理をしているかというと、Cloud Schedulerで、6時、12時、18時にFunctionsにリクエストを飛ばす。<br>
+Functionsはリクエストを受け取ったら、FeedをDiscord Web hook目掛けて飛ばす。<br>
+飛ばしたTitle, URLをCloud Storageに保存してキャッシュ的な役割をしてもらう。</p>
+<p>こんな感じ。</p>
+<p>無料枠で今やっているけど、無料枠が終わって月 1000yenくらいかかってくるとFeedlyと変わらなくなるので少し微妙。<br>
+500yenくらいなら安いのでそのまま生きさせる予定。</p>
+<p>工夫した点としては、</p>
+<ul>
+<li>Google Cloudのサービスを触って、こういうところに気をつけないといけないんだな〜とかセキュリティ周りのこと (工夫というか学び？)</li>
+<li>Cloud Storageのデータ量を減らすためにTitleとURLをmd5でハッシュ化した値を書き込むという方式 (どれほど変わるのか。)</li>
+</ul>
+<p>AIが近くにいると、かなり助かるけどClaudeの情報が古かったりして、変化の早いCloudとは少し相性が悪い気もした。</p>
+<p>今の所、CTFチームのメンバーと、前職でお世話になった先輩に入ってもらっているが、役に立ってそう+金そこまでかからんなとわかったら、先着 5名くらいで受け入れてもいいかもしれない。</p>
+
+			</div>
+			
+			
+                        
+
+
+		</article>
+	</main>
+
+        <p>&copy; 2025 <a href="http://localhost:1313/">back</a></p>
+        
+
+        
+
+	<footer>
+
+
+        <div>
+            <time id="time"></time>
+        </div>
+        <script src="/js/time.js">
+        </script>
+</footer>
+
+</body>
+
+</html>
